@@ -54,6 +54,8 @@ def get_player_stats(url,year=2021):
         return reply
 
 def player_query(input):
+    """Parses user input from Telegram to determine arguments for get_player_stats.
+    args - input - user input."""
     stripped_input = input.lstrip('/playerstats ')
     parsed_input = stripped_input.split(',')
     print(parsed_input, stripped_input)
@@ -65,18 +67,15 @@ def player_query(input):
         text = parsed_input[0]
         year = int(parsed_input[1])
     print(text, year)
-    
     url = 'https://www.basketball-reference.com/search/search.fcgi?search='
     split = text.lower().split(' ')
     if len(split) == 1:
-         url + split[0]
+         url + split[0] #Creating URL to access Basketball Reference search page
     print(split)
-    if len(split) >= 1:
+    if len(split) >= 1: 
         for i in range(len(split)):
             url += split[i] + '+'
-    print(url)
-    page = requests.get(url)
-    
+    page = requests.get(url) #Accessing search url
     if page.status_code == 200:
         soup = BeautifulSoup(page.content, 'html.parser')
         is_search = soup.find('h1') #Check to see if cursor has landed on search page
@@ -102,7 +101,7 @@ def player_query(input):
                     return get_player_stats(new_url,year)
 
             if len(results) in range(1,11): #Between 1-10 search results - worth looking for a match
-                for key in results.keys():
+                for key in results.keys(): #TODO: Present user with a list of players for them to choose from
                     if text.lower() in key.lower():
                         new_url = 'https://www.basketball-reference.com' + results[key]
                         print(new_url)
@@ -110,7 +109,7 @@ def player_query(input):
                     else:
                         pass
             
-            if len(results) >=10: #Too many search results - ask user to redefine query
+            if len(results) >=10: #Too many search results - ask user to redefine query w/suggestions
                 key_list = [key for key in results.keys()]
                 output = "Your query generated too many results. Were you looking for:\n"
                 for i in range(0,11):
