@@ -2,7 +2,7 @@ from keys import api_key
 import telebot
 import datetime
 from players import player_query
-from teams import league_query 
+from teams import league_query, team_query 
 from games import get_games
 
 bot = telebot.TeleBot(api_key, parse_mode=None)
@@ -16,7 +16,7 @@ def send_help(message):
     bot.reply_to(message, output, parse_mode='MARKDOWN')
 
 @bot.message_handler(commands=['playerstats'])
-def player_stats(message):
+def playerstats(message):
     output = player_query(message.text)
     bot.send_message(message.chat_id, output, parse_mode='MARKDOWN')
 
@@ -29,5 +29,10 @@ def standings(message):
 def games(message):
     output = get_games()
     bot.send_message(message.chat.id, output, parse_mode='MARKDOWN',disable_web_page_preview=True)
+
+@bot.message_handler(commands=['teamstats'])
+def teamstats(message):
+    output = team_query(message.text)
+    bot.send_message(message.chat.id, output, parse_mode='MARKDOWN')
    
 bot.polling()

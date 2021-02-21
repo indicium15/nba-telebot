@@ -130,7 +130,6 @@ dmypy.json
 
 testingboard.py
 keys.py
-resources.py
 .chromedriver
 .pycache
 .vscode/

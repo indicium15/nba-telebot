@@ -59,11 +59,10 @@ def player_query(input):
     stripped_input = input.lstrip('/playerstats ')
     parsed_input = stripped_input.split(',')
     print(parsed_input, stripped_input)
-    
-    if len(parsed_input) == 1:
+    if len(parsed_input) == 1: #Year not mentioned
         text = parsed_input[0]
         year = 2021
-    if len(parsed_input) == 2:
+    if len(parsed_input) == 2: #Year mentioned
         text = parsed_input[0]
         year = int(parsed_input[1])
     print(text, year)
@@ -75,7 +74,7 @@ def player_query(input):
     if len(split) >= 1: 
         for i in range(len(split)):
             url += split[i] + '+'
-    page = requests.get(url) #Accessing search url
+    page = requests.get(url) #Accessing url
     if page.status_code == 200:
         soup = BeautifulSoup(page.content, 'html.parser')
         is_search = soup.find('h1') #Check to see if cursor has landed on search page
@@ -87,9 +86,9 @@ def player_query(input):
                 link = player.find('a', href=True)
                 name = player.find('a').contents[0]
                 modified_name = re.sub(r"\([^()]*\)",'',name).strip()
-                if 'international' in link['href']:
+                if 'international' in link['href']: #Exclude international stats
                     pass
-                elif 'gleague' in link['href']:
+                elif 'gleague' in link['href']: #Exclude G League stats
                     pass
                 else:
                     results[modified_name] = link['href']

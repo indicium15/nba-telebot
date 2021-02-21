@@ -17,8 +17,9 @@ def get_games():
     cookies_button.click()
     div = driver.find_elements_by_xpath('//a[@class="flex-1 px-2 pt-5 h-full block hover:no-underline relative text-sm pt-5 pb-4 mb-1 px-2"]')
     for i in div:
+        text = (i.get_attribute('innerText'))
         box_score_url = i.get_attribute('href')
-        processing = i.text.split('\n')
+        processing = text.split()
         print(processing)
         if len(processing) == 10: #Game is live
             output += "[{} vs {}]({}): {}-{} ({})\n".format(processing[0],processing[-2],box_score_url,processing[2],processing[-3],processing[4])
@@ -29,5 +30,3 @@ def get_games():
     print(output)
     driver.close()
     return output
-
-
