@@ -1,4 +1,6 @@
 from keys import chromedriver_path
+import requests
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -29,4 +31,17 @@ def get_games():
             output += "[{} vs {}]({}): {}\n".format(processing[0],processing[-2],box_score_url, processing[2])
     print(output)
     driver.close()
+    return output
+
+def get_news():
+    base_url = 'https://basketball.realgm.com'
+    news = 'https://basketball.realgm.com/nba/news'
+    page = requests.get(news)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    articles = soup.find_all('a',attrs={'class':'article-title'},href=True, limit=10)
+    output = ''
+    for article in articles:
+        output += '[{}]({})\n\n'.format(article.text, base_url+article['href'])
+    output += '[{}]({})'.format('Click Here for More NBA News',base_url)
+    print(output)
     return output
